@@ -1,4 +1,6 @@
-import "./styles/global.css";
-import "./styles/sass/styles.scss";
+import { NeonTrail } from "./lib/NeonTrail";
+import "./styles/global.scss";
 
-console.log("index.js connected!");
+const neonTrail = new NeonTrail({});
+
+neonTrail.init();
