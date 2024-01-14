@@ -13,6 +13,7 @@ const defaultOptions: OptionalObjectOf<NtOptions> = {
   burstSpeed: 5,
   burstParticleSize: 7,
   enableClickBurst: true,
+  glow: 10,
 };
 
 export const NEON_COLORS = {
@@ -151,6 +152,7 @@ export class NeonTrail {
             this.options.slowSpeed
           : Math.random() * (this.options.fastSpeed * 2) -
             this.options.fastSpeed) + (this.mouseLoc?.velocity.y ?? 0),
+      glow: biasedRandom(4) * this.options.glow,
     };
   }
 
@@ -172,6 +174,7 @@ export class NeonTrail {
           Math.random() * (this.options.burstSpeed * 2) -
           this.options.burstSpeed +
           (this.mouseLoc?.velocity.y ?? 0),
+        glow: biasedRandom(4) * this.options.glow,
       });
     }
   }
@@ -191,7 +194,10 @@ export class NeonTrail {
     if (this.mouseLoc !== null) this.addParticles(true);
 
     for (let i = 0; i < this.particles.length; i++) {
+      this.ctx.save();
       this.ctx.fillStyle = this.particles[i].color;
+      this.ctx.shadowBlur = this.particles[i].glow;
+      this.ctx.shadowColor = this.particles[i].color;
       // Change this to get both circles and rects
       if (Math.random() > 1) {
         this.ctx.beginPath();
@@ -212,6 +218,8 @@ export class NeonTrail {
           this.particles[i].size
         );
       }
+
+      this.ctx.restore();
 
       this.particles[i].x += this.particles[i].speedX;
       this.particles[i].y += this.particles[i].speedY;

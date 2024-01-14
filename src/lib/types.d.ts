@@ -17,6 +17,7 @@ declare global {
     burstSpeed?: number;
     burstDensity?: number;
     burstParticleSize?: number;
+    glow?: number;
   };
 
   type NtVector = {
@@ -36,5 +37,6 @@ declare global {
     color: string;
     speedX: number;
     speedY: number;
+    glow: number;
   };
 }
