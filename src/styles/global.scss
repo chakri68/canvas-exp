@@ -7,6 +7,7 @@ body {
   padding: 0;
   margin: 0;
   background-color: black;
+  color-scheme: dark;
 }
 
 canvas.nt-canvas {
@@ -14,5 +15,7 @@ canvas.nt-canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
+  z-index: 1000;
+  background: transparent;
+  pointer-events: none;
 }
