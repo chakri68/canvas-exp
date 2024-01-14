@@ -18,6 +18,7 @@ declare global {
     burstDensity?: number;
     burstParticleSize?: number;
     glow?: number;
+    idleAnimation?: boolean;
   };
 
   type NtVector = {

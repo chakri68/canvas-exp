@@ -14,6 +14,7 @@ const defaultOptions: OptionalObjectOf<NtOptions> = {
   burstParticleSize: 7,
   enableClickBurst: true,
   glow: 10,
+  idleAnimation: true,
 };
 
 export const NEON_COLORS = {
@@ -51,6 +52,8 @@ export class NeonTrail {
   private isStopped: boolean = true;
   private ticker: () => number;
   private shrinkMode: boolean = false;
+  private animationFrame: number | null = null;
+  private paused: boolean = false;
 
   constructor(options: NtOptions) {
     this.options = mergeOptionals(options, defaultOptions);
@@ -83,10 +86,14 @@ export class NeonTrail {
     document.addEventListener("mousemove", this.onMouseMove);
     document.addEventListener("mouseleave", this.onMouseLeave);
     document.addEventListener("mouseenter", this.onMouseEnter);
-    if (this.options.enableClickBurst)
-      document.addEventListener("mousedown", (e: MouseEvent) => {
-        this.addBurstParticles();
-      });
+    document.addEventListener("mousedown", this.onMouseClick);
+  }
+
+  private removeListeners() {
+    document.removeEventListener("mousemove", this.onMouseMove);
+    document.removeEventListener("mouseleave", this.onMouseLeave);
+    document.removeEventListener("mouseenter", this.onMouseEnter);
+    document.removeEventListener("mousedown", this.onMouseClick);
   }
 
   private onMouseLeave = (e: MouseEvent) => {
@@ -117,6 +124,10 @@ export class NeonTrail {
     this.timeout = setTimeout(() => {
       this.isStopped = true;
     }, this.options.timeout);
+  };
+
+  private onMouseClick = (e: MouseEvent) => {
+    if (this.options.enableClickBurst) this.addBurstParticles();
   };
 
   private addParticles(isStatic: boolean = false) {
@@ -180,7 +191,23 @@ export class NeonTrail {
   }
 
   public init() {
+    if (this.animationFrame !== null)
+      return console.warn("Animation already started");
     this.animate();
+  }
+
+  public pause() {
+    if (this.paused) return console.warn("Already paused");
+    this.removeListeners();
+    this.paused = true;
+    console.log("Paused");
+  }
+
+  public resume() {
+    if (!this.paused) return console.warn("Not paused");
+    this.setupListeners();
+    this.paused = false;
+    console.log("Resumed");
   }
 
   public stop() {
@@ -191,7 +218,8 @@ export class NeonTrail {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     // Static particles
-    if (this.mouseLoc !== null) this.addParticles(true);
+    if (this.options.idleAnimation && this.mouseLoc !== null)
+      this.addParticles(true);
 
     for (let i = 0; i < this.particles.length; i++) {
       this.ctx.save();
@@ -231,11 +259,15 @@ export class NeonTrail {
       }
     }
 
-    requestAnimationFrame(this.animate);
+    this.animationFrame = requestAnimationFrame(this.animate);
   };
 
   private stopAnimation() {
     // TODO: Implement this shat
+    if (this.animationFrame === null)
+      return console.warn("Animation already stopped");
+    cancelAnimationFrame(this.animationFrame);
+    this.animationFrame = null;
   }
 
   static getWithWeightedProb<T>(values: { val: T; prob: number }[]): {
