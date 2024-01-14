@@ -6,6 +6,10 @@ type NtOptions = {
   timeout?: number;
   maxSize?: number;
   waneSpeed?: number;
+  enableClickBurst?: boolean;
+  burstSpeed?: number;
+  burstDensity?: number;
+  burstParticleSize?: number;
 };
 
 type NtVector = {
@@ -13,7 +17,10 @@ type NtVector = {
   y: number;
 };
 
-type NtMouseLoc = NtVector;
+type NtMouseLoc = {
+  position: NtVector;
+  velocity: NtVector;
+};
 
 type NtParticle = {
   x: number;

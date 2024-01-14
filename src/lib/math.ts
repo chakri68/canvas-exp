@@ -64,8 +64,6 @@ export function getWithWeightedProb<T>(values: { val: T; prob: number }[]) {
     return [...acc, cur.prob + (acc[acc.length - 1] ?? 0)];
   }, []);
 
-  console.log({ cumulativeProbs });
-
   const get = () => {
     const r = Math.random();
     for (let i = 0; i < cumulativeProbs.length; i++) {
