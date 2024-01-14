@@ -1,8 +1,7 @@
 import { NeonTrail } from "./lib/NeonTrail";
 import "./styles/global.scss";
 
-const neonTrail = new NeonTrail({
-  density: 100,
-});
+window.NeonTrail = NeonTrail;
 
-neonTrail.init();
+const n = new NeonTrail({});
+n.init();

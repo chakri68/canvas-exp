@@ -9,9 +9,9 @@ const defaultOptions: OptionalObjectOf<NtOptions> = {
   timeout: 1000,
   maxSize: 7,
   waneSpeed: 0.25,
-  burstDensity: 200,
-  burstSpeed: 20,
-  burstParticleSize: 15,
+  burstDensity: 100,
+  burstSpeed: 5,
+  burstParticleSize: 7,
   enableClickBurst: true,
 };
 
