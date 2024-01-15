@@ -1,5 +1,9 @@
 import { Ticker, biasedRandom, getVelocityVector } from "./math";
-import { OptionalObjectOf, assertOrThrow, mergeOptionals } from "./type-utils";
+import {
+  OptionalObjectOf,
+  assertOrThrow,
+  mergeOptionals,
+} from "../../../lib/type-utils";
 
 const defaultOptions: OptionalObjectOf<NtOptions> = {
   density: 10,

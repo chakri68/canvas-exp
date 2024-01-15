@@ -3,9 +3,19 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const templatePath = (pageName) => {
+  return `./src/pages/${pageName}/index.html`;
+};
+
+const scriptPath = (pageName) => {
+  return `./src/pages/${pageName}/scripts/index.ts`;
+};
+
 module.exports = {
   mode: "none",
-  entry: "./src/index.ts",
+  entry: {
+    "neon-trail": scriptPath("neon-trail"),
+  },
   output: {
     globalObject: "self",
     filename: "[name].bundle.js",
@@ -25,8 +35,15 @@ module.exports = {
     new HtmlWebpackPlugin({
       hash: true,
       filename: "index.html",
-      template: "./src/index.html",
-      title: "Trailing Cursor",
+      template: templatePath("index"),
+      title: "Canvas 💃 💅",
+    }),
+    new HtmlWebpackPlugin({
+      hash: true,
+      filename: "neon-trail.html",
+      template: templatePath("neon-trail"),
+      title: "Neon Trail",
+      chunks: ["neon-trail"],
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -45,6 +62,9 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".ts", ".js"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   module: {
     rules: [
