@@ -158,15 +158,15 @@ export class NeonTrail {
       speedX:
         (slow
           ? Math.random() * (this.options.slowSpeed * 2) -
-            this.options.slowSpeed
+          this.options.slowSpeed
           : Math.random() * (this.options.fastSpeed * 2) -
-            this.options.fastSpeed) + (this.mouseLoc?.velocity.x ?? 0),
+          this.options.fastSpeed) + (this.mouseLoc?.velocity.x ?? 0),
       speedY:
         (slow
           ? Math.random() * (this.options.slowSpeed * 2) -
-            this.options.slowSpeed
+          this.options.slowSpeed
           : Math.random() * (this.options.fastSpeed * 2) -
-            this.options.fastSpeed) + (this.mouseLoc?.velocity.y ?? 0),
+          this.options.fastSpeed) + (this.mouseLoc?.velocity.y ?? 0),
       glow: biasedRandom(4) * this.options.glow,
     };
   }
@@ -278,11 +278,12 @@ export class NeonTrail {
     get: () => T;
   } {
     // Check if the probs addup to more than 1
-    if (values.reduce((acc, cur) => acc + cur.prob, 0) > 1)
-      throw new Error("probabilities can't addup to more than 1");
+    const s = values.reduce((acc, cur) => acc + cur.prob, 0);
+
+    const valueProbs = values.map((v) => ({ ...v, prob: v.prob / s }));
 
     // Generate the cumulative probabilities
-    const cumulativeProbs = values.reduce((acc: number[], cur) => {
+    const cumulativeProbs = valueProbs.reduce((acc: number[], cur) => {
       return [...acc, cur.prob + (acc[acc.length - 1] ?? 0)];
     }, []);
 
@@ -290,10 +291,10 @@ export class NeonTrail {
       const r = Math.random();
       for (let i = 0; i < cumulativeProbs.length; i++) {
         if (cumulativeProbs[i] > r) {
-          return values[i].val;
+          return valueProbs[i].val;
         }
       }
-      return values[values.length - 1].val;
+      return valueProbs[valueProbs.length - 1].val;
     };
 
     return { get };
